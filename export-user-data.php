@@ -1930,7 +1930,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
          * 
          * @since       1.1.4
          */
-        public function unserialize( $value )
+        public static function unserialize( $value )
         {
             
             // the $value is serialized ##
