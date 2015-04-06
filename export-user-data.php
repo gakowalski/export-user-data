@@ -60,6 +60,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         private $limit_total = '';
         private $format = '';
         private $export_method = 'excel'; // default to Excel export ##
+        private $export_page = null; //will be defined in add_admin_pages()
  
         
         /**
@@ -123,7 +124,14 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         public function add_admin_pages() 
         {
 
-            add_users_page( __( 'Export User Data', $this->text_domain ), __( 'Export User Data', $this->text_domain ), 'list_users', $this->text_domain, array( $this, 'users_page' ) );
+            $this->export_page = add_users_page( 
+                __( 'Export User Data', $this->text_domain ), 
+                __( 'Export User Data', $this->text_domain ), 
+                'list_users', 
+                $this->text_domain, 
+                array( $this, 'users_page' ) 
+            );
+            
 
         }
 
@@ -135,7 +143,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         {
 
             // load the scripts on only the plugin admin page ##
-            if ( isset( $_GET['page'] ) && ( $_GET['page'] == $this->text_domain ) ) {
+            if (get_current_screen()->id == $this->export_page){
 
                 wp_register_style( 'q_export_user_data', plugins_url( 'css/export-user-data.css' ,__FILE__ ));
                 wp_enqueue_style( 'q_export_user_data' );
@@ -1489,9 +1497,9 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
          */
         public function jquery() 
         {
-
+            
             // load the scripts on only the plugin admin page 
-            if (isset( $_GET['page'] ) && ( $_GET['page'] == $this->text_domain ) ) {
+            if (get_current_screen()->id == $this->export_page){
 ?>
         <script>
             
@@ -1623,7 +1631,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         {
 
             // load the scripts on only the plugin admin page 
-            if (isset( $_GET['page'] ) && ( $_GET['page'] == $this->text_domain ) ) {
+            if (get_current_screen()->id == $this->export_page){
 ?>
         <style>
             .toggleable { display: none; }
