@@ -59,6 +59,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         private $limit_offset = '';
         private $limit_total = '';
         private $format = '';
+        private $export_method = 'excel'; // default to Excel export ##
  
         
         /**
@@ -545,17 +546,16 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
             }
 
             // export method ? ##
-            $export_method = 'excel'; // default to Excel export ##
             if ( isset( $_POST['format'] ) && $_POST['format'] != '' ) {
 
-                $export_method = sanitize_text_field( $_POST['format'] );
+                $this->export_method = sanitize_text_field( $_POST['format'] );
 
             }
 
             // set export filename structure ##
             $filename = $sitename . 'users.' . date( 'Y-m-d-H-i-s' );
 
-            switch ( $export_method ) {
+            switch ( $this->export_method ) {
 
                 case ( 'csv' ):
 
