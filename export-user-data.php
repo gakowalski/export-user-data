@@ -95,8 +95,6 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                 add_action( 'init', array( $this, 'generate_data' ), 3 );
                 add_filter( 'q_eud_exclude_data', array( $this, 'exclude_data' ) );
                 add_action( 'admin_enqueue_scripts', array( $this, 'add_css_and_js' ), 1 );
-                add_action( 'admin_footer', array( $this, 'jquery' ), 100000 );
-                add_action( 'admin_footer', array( $this, 'css' ), 100000 );
                 
             }
 
@@ -139,24 +137,40 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         /**
          * style and interaction 
          */
-        public function add_css_and_js( $hook ) 
+        public function add_css_and_js() 
         {
 
             // load the scripts on only the plugin admin page ##
-            if (get_current_screen()->id == $this->export_page){
+            if (!get_current_screen()->id == $this->export_page) return;
 
-                wp_register_style( 'q_export_user_data', plugins_url( 'css/export-user-data.css' ,__FILE__ ));
-                wp_enqueue_style( 'q_export_user_data' );
-                wp_enqueue_script( 'q_eud_multi_select_js', plugins_url( 'js/jquery.multi-select.js', __FILE__ ), array('jquery'), '0.9.8', false );
-                
-                // add script ##
-                wp_enqueue_script('jquery-ui-datepicker');
+            
+            wp_register_style('jquery-ui-css', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+            wp_register_style( 'q_export_user_data', plugins_url( 'css/export-user-data.css' ,__FILE__ ),array('jquery-ui-css'),Q_EXPORT_USER_DATA_VERSION);
 
-                // add style ##
-                wp_enqueue_style( 'jquery-ui-datepicker' );
-                wp_enqueue_style('jquery-ui-css', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
-                
-            } 
+            wp_register_script( 'q_eud_multi_select_js', plugins_url( 'js/jquery.multi-select.js', __FILE__ ), array('jquery'), '0.9.8', false );
+            wp_register_script( 'q_export_user_data', plugins_url( 'js/export-user-data.js', __FILE__ ), array('jquery','q_eud_multi_select_js','jquery-ui-datepicker'),Q_EXPORT_USER_DATA_VERSION, true );
+            
+            
+            //localize vars
+            // method returns an object with "first" & "last" keys ##
+            $user_registered_dates = self::get_user_registered_dates(); 
+            
+            $localize_vars=array(
+                'usermeta_saved_fields'                 => $this->quote_array( $this->usermeta_saved_fields ),
+                'bp_fields_saved_fields'                => $this->quote_array($this->bp_fields_saved_fields ),
+                'bp_fields_update_time_saved_fields'    => $this->quote_array( $this->bp_fields_update_time_saved_fields ),
+                'txt_hide'                  => __( 'Hide', $this->text_domain ),
+                'txt_show'                  => __( 'Show', $this->text_domain ),
+                'datepicker_min'            => substr( $user_registered_dates["0"]->first, 0, 10 ),
+                'datepicker_max'            => substr( $user_registered_dates["0"]->last, 0, 10 ),
+            );
+
+            wp_localize_script('q_export_user_data','q_eud', $localize_vars);
+            
+            
+            wp_enqueue_style( 'q_export_user_data' );
+            wp_enqueue_script( 'q_export_user_data' );
+
 
         }
         
@@ -1490,159 +1504,6 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 <?php
         }
 
-        
-        /**
-         * Inline jQuery
-         * @since       0.8.2
-         */
-        public function jquery() 
-        {
-            
-            // load the scripts on only the plugin admin page 
-            if (get_current_screen()->id == $this->export_page){
-?>
-        <script>
-            
-        // lazy load in some jQuery validation ##
-        jQuery(document).ready(function($) {
-
-            // build super multiselect ##
-            jQuery('#usermeta, #bp_fields, #bp_fields_update_time').multiSelect();
-            
-            //Select any fields from saved settings ##
-            jQuery('#usermeta').multiSelect('select',([<?php echo( $this->quote_array( $this->usermeta_saved_fields ) ); ?>]));
-            jQuery('#bp_fields').multiSelect('select',([<?php echo( $this->quote_array($this->bp_fields_saved_fields ) ); ?>]));
-            jQuery('#bp_fields_update_time').multiSelect('select',([<?php echo( $this->quote_array( $this->bp_fields_update_time_saved_fields ) ); ?>]));
-
-            // show only common ##
-            jQuery('.usermeta-common').click(function(e){
-                e.preventDefault();
-                jQuery('#ms-usermeta .ms-selectable li.system').hide();
-            });
-
-            // show all ##
-            jQuery('.usermeta-all').click(function(e){
-                e.preventDefault();
-                jQuery('#ms-usermeta .ms-selectable li').show();
-            });
-
-            // select all ##
-            jQuery('.select-all').click(function(e){
-                e.preventDefault();
-                jQuery( jQuery(this).parent().parent().parent().find( 'select' ) ).multiSelect( 'select_all' );
-            });
-            
-            // select none ##
-            jQuery('.select-none').click(function(e){
-                e.preventDefault();
-                jQuery( jQuery(this).parent().parent().parent().find( 'select' ) ).multiSelect( 'deselect_all' );
-            });
-
-
-            // validate number inputs ##
-            $("input.numeric").blur(function() {
-
-                //console.log("you entered "+ $(this).val());
-
-                if ( $(this).val() && ! $.isNumeric( $(this).val() ) ) {
-
-                    //console.log("this IS NOT a number");
-                    $(this).css({ 'background': 'red', 'color': 'white' }); // highlight error ##
-                    $("p.submit .button-primary").attr('disabled','disabled'); // disable submit ##
-
-                } else {
-
-                    $(this).css({ 'background': 'white', 'color': '#333' }); // remove error highlighting ##
-                    $("p.submit .button-primary").removeAttr('disabled'); // enable submit ##
-
-                }
-
-            });
-            
-            // toggle advanced options ##
-            jQuery(".toggle a").click( function(e) {
-                e.preventDefault();
-                $toggleable = jQuery("tr.toggleable");
-                $toggleable.toggle();
-                if ( $toggleable.is(":visible") ) {
-                    jQuery(this).text("<?php _e( 'Hide', $this->text_domain ); ?>");
-                } else {
-                    jQuery(this).text("<?php _e( 'Show', $this->text_domain ); ?>");
-                }
-            });
-            
-            // validate save button ##
-            jQuery("#save_export").click( function(e) {
-                
-                // grab the value of the input ##
-                var q_eud_save_options_new_export = jQuery('#q_eud_save_options_new_export').val();
-                
-                if ( ! q_eud_save_options_new_export || q_eud_save_options_new_export == '' ) {
-                    
-                    e.preventDefault(); // stop things here ##
-                    jQuery('#q_eud_save_options_new_export').addClass("error");
-                    
-                }
-                
-            });
-            
-            // remove validation on focus ##
-            jQuery("body").on( 'focus', '#q_eud_save_options_new_export', function(e) {
-                
-                jQuery(this).removeClass("error");
-                
-            });
-            
-<?php 
-            
-            // method returns an object with "first" & "last" keys ##
-            $dates = self::get_user_registered_dates(); 
-            
-?>
-            
-            // start date picker ##
-            jQuery('.start-datepicker').datepicker( {
-                dateFormat  : 'yy-mm-dd',
-                minDate     : '<?php echo substr( $dates["0"]->first, 0, 10 ); ?>',
-                maxDate     : '<?php echo substr( $dates["0"]->last, 0, 10 ); ?>'
-            } );
-            
-            // end date picker ##
-            jQuery('.end-datepicker').datepicker( {
-                dateFormat  : 'yy-mm-dd',
-                minDate     : '<?php echo substr( $dates["0"]->first, 0, 10 ); ?>',
-                maxDate     : '<?php echo substr( $dates["0"]->last, 0, 10 ); ?>'
-            } );
-            
-        });
-
-        </script>
-<?php
-            }
-
-        }
-        
-        
-        /** 
-         * Inline CSS
-         * @since       0.8.2
-         */
-        public function css() 
-        {
-
-            // load the scripts on only the plugin admin page 
-            if (get_current_screen()->id == $this->export_page){
-?>
-        <style>
-            .toggleable { display: none; }
-            .hidden { display: none; }
-        </style>
-<?php
-            }
-
-        }
-        
-        
         /**
          * Data to exclude from export
          */

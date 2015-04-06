@@ -131,3 +131,6 @@ th p.filter {
   cursor: text;
   margin-bottom: 0px;
 }
+
+.toggleable { display: none; }
+.hidden { display: none; }
