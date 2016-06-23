@@ -1,0 +1,256 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Export User Data\n"
+"POT-Creation-Date: 2016-06-23 15:45+0200\n"
+"PO-Revision-Date: 2016-06-23 16:44+0200\n"
+"Last-Translator: nothing <nothing@nothing.com>\n"
+"Language-Team: nothing <nothing@nothing.com>\n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-Basepath: ../../plugins/export-user-data\n"
+"X-Poedit-WPHeader: export-user-data.php\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: export-user-data.php:154
+#, php-format
+msgid " - %s%s() %s:%d"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: export-user-data.php:197 export-user-data.php:1260
+msgid "Export User Data"
+msgstr "Export uživatelů"
+
+#: export-user-data.php:1158
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Nemáte dostatečné oprávnění pro zobrazení stránky."
+
+#: export-user-data.php:1265
+msgid "No users found."
+msgstr "Nebyli nalezeni žádní uživatelé."
+
+#: export-user-data.php:1321
+msgid "User Meta Fields"
+msgstr "Uživatelská meta pole"
+
+#: export-user-data.php:1323
+msgid "Filter"
+msgstr "Filtr"
+
+#: export-user-data.php:1323 export-user-data.php:1326
+#: export-user-data.php:1409 export-user-data.php:1446
+msgid "All"
+msgstr "Vše"
+
+#: export-user-data.php:1323
+msgid "Common"
+msgstr "Základní "
+
+#: export-user-data.php:1326 export-user-data.php:1409
+#: export-user-data.php:1446
+msgid "Select"
+msgstr "Vybrat"
+
+#: export-user-data.php:1326 export-user-data.php:1409
+#: export-user-data.php:1446
+msgid "None"
+msgstr "Žádný"
+
+#: export-user-data.php:1377
+msgid ""
+"Select the user meta keys to export, use the filters to simplify the list."
+msgstr ""
+"Vyberte uživatelská pole pro export. Můžete použít filtr pro rychlejší "
+"vybrání."
+
+#: export-user-data.php:1407
+msgid "BP xProfile Fields"
+msgstr ""
+
+#: export-user-data.php:1432
+msgid "Select the BuddyPress XProfile keys to export"
+msgstr ""
+
+#: export-user-data.php:1444
+msgid "BP xProfile Fields Update Time"
+msgstr ""
+
+#: export-user-data.php:1463
+msgid "Select the BuddyPress XProfile keys updated dates to export"
+msgstr ""
+
+#: export-user-data.php:1470
+msgid "BP User Groups"
+msgstr ""
+
+#: export-user-data.php:1475
+#, php-format
+msgid "Include BuddyPress Group Data. <a href=\"%s\" target=\"_blank\">%s</a>"
+msgstr ""
+
+#: export-user-data.php:1488
+msgid "Standard User Fields"
+msgstr "Základní uživatelské pole"
+
+#: export-user-data.php:1497
+#, php-format
+msgid ""
+"Include Standard user profile fields, such as user_login. <a href=\"%s\" "
+"target=\"_blank\">%s</a>"
+msgstr ""
+"Včetně standartních uživatelských polí v profilu, jako například uživatelské "
+"jméno. <a href=\"%s\" target=\"_blank\">%s</a>"
+
+#: export-user-data.php:1507
+msgid "Role"
+msgstr "Úroveň"
+
+#: export-user-data.php:1512
+msgid "All Roles"
+msgstr "Všechny úrovně"
+
+#: export-user-data.php:1533
+#, php-format
+msgid ""
+"Filter the exported users by a WordPress Role. <a href=\"%s\" target=\"_blank"
+"\">%s</a>"
+msgstr "Filtr uživatelských úrovní. <a href=\"%s\" target=\"_blank\">%s</a>"
+
+#: export-user-data.php:1542
+msgid "User Roles"
+msgstr "Uživatelské úrovně"
+
+#: export-user-data.php:1547
+#, php-format
+msgid "Include all of the users <a href=\"%s\" target=\"_blank\">%s</a>"
+msgstr "Všichni uživatelé <a href=\"%s\" target=\"_blank\">%s</a>"
+
+#: export-user-data.php:1561
+msgid "Programs"
+msgstr "Programy"
+
+#: export-user-data.php:1566
+msgid "All Programs"
+msgstr "Všechny programy"
+
+#: export-user-data.php:1587
+msgid "Registered"
+msgstr "Registrace"
+
+#: export-user-data.php:1593
+msgid "Pick a start and end user registration date to limit the results."
+msgstr ""
+"Vyberte časový rozsah registrací uživatelů pro omezení výsledků exportu."
+
+#: export-user-data.php:1600
+msgid "Limit Range"
+msgstr "Omezit záznamy"
+
+#: export-user-data.php:1602
+msgid "Offset"
+msgstr "Posunout záznamy"
+
+#: export-user-data.php:1603
+msgid "Total"
+msgstr "Celkem"
+
+#: export-user-data.php:1606
+#, php-format
+msgid ""
+"Enter an offset start number and a total number of users to export. <a href="
+"\"%s\" target=\"_blank\">%s</a>"
+msgstr ""
+"Zadejte číslo posunutí a celkový počet záznamů uživatelského exportu. <a "
+"href=\"%s\" target=\"_blank\">%s</a>"
+
+#: export-user-data.php:1615
+msgid "Updated Since"
+msgstr "Aktualizováno od"
+
+#: export-user-data.php:1635
+msgid ""
+"Limit the results to users who have updated this extended profile field "
+"after this date."
+msgstr ""
+"Omezení výsledků uživatelů, kteří aktualizovali profil po konkrétním dni."
+
+#: export-user-data.php:1642
+msgid "Format"
+msgstr "Formát"
+
+#: export-user-data.php:1647 export-user-data.php:1649
+msgid "Excel"
+msgstr ""
+
+#: export-user-data.php:1652 export-user-data.php:1654
+msgid "CSV"
+msgstr "CSV"
+
+#: export-user-data.php:1660
+msgid "Select the format for the export file."
+msgstr "Vyberte formát exportu"
+
+#: export-user-data.php:1667
+msgid "Stored Options"
+msgstr "Uložené nastavení"
+
+#: export-user-data.php:1671
+msgid "Export Name"
+msgstr "Jméno exportu"
+
+#: export-user-data.php:1672
+msgid "Save"
+msgstr "Uložit"
+
+#: export-user-data.php:1708
+msgid "Load"
+msgstr "Načíst"
+
+#: export-user-data.php:1709
+msgid "Delete"
+msgstr "Odstranit"
+
+#: export-user-data.php:1716
+msgid "Save, load or delete your stored export options."
+msgstr "Uložte, nahrajte nebo odstraňte vaše nastavení."
+
+#: export-user-data.php:1723
+msgid "Advanced Options"
+msgstr "Rozšířené možnosti"
+
+#: export-user-data.php:1727 export-user-data.php:1821
+msgid "Show"
+msgstr "Zobrazit"
+
+#: export-user-data.php:1735
+msgid "Run Export"
+msgstr "Exportovat"
+
+#: export-user-data.php:1819
+msgid "Hide"
+msgstr "Skrýt"
+
+#. Plugin URI of the plugin/theme
+msgid "http://qstudio.us/plugins/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Export User data, metadata and BuddyPress X-Profile data."
+msgstr "Export uživatelských dat, metadat a data  BuddyPress X-Profile."
+
+#. Author of the plugin/theme
+msgid "Q Studio"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://qstudio.us"
+msgstr ""
