@@ -79,27 +79,6 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
 
         /**
-         * Load plugin text-domain
-         *
-         * @since       0.9.0
-         * @return      void
-         **/
-        public function load_plugin_textdomain()
-        {
-
-            // The "plugin_locale" filter is also used in load_plugin_textdomain()
-            $locale = apply_filters( 'plugin_locale', get_locale(), 'export-user-data' );
-
-            // try from global WP location first ##
-            load_textdomain( 'export-user-data', WP_LANG_DIR.'/plugins/export-user-data-'.$locale.'.mo' );
-
-            // try from plugin last ##
-            load_plugin_textdomain( 'export-user-data', false, basename( dirname( __FILE__ ) ) . '/languages' );
-
-        }
-
-
-        /**
         * Hook intro WP filters and actions
         *
         * @since 1.2.8
@@ -109,9 +88,12 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         {
 
             // set text domain ##
-            add_action( 'init', array( $this, 'load_plugin_textdomain' ), 1 );
+            add_action( 'init', array( $this, 'export_user_data_textdomain' ), -1 );
+
 
             if ( is_admin() ) {
+
+                add_action( 'admin_init', array( $this, 'export_user_data_load_plugin_textdomain') );
 
                 // load BP ##
                 add_action( Q_EUD_HOOK, array( $this, 'load_buddypress' ), Q_EUD_PRIORITY+1 );
@@ -126,7 +108,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                 #add_filter( 'q_eud_exclude_data', array( $this, 'exclude_data' ) );
 
                 // add export page inside admin ##
-                add_action( 'admin_menu', array( $this, 'add_admin_pages' ) );
+                add_action( 'admin_menu', array( $this, 'add_admin_pages' ), 10 );
 
                 // UI style and functionality ##
                 add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 1 );
@@ -134,6 +116,26 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                 add_action( 'admin_footer', array( $this, 'css' ), 100000 );
 
             }
+
+        }
+
+        /**
+         * Load plugin text-domain
+         *
+         * @since       0.9.0
+         * @return      void
+         **/
+        public function export_user_data_textdomain()
+        {
+
+            // The "plugin_locale" filter is also used in load_plugin_textdomain()
+            $locale = apply_filters( 'plugin_locale', get_locale(), 'export-user-data' );
+
+            // try from global WP location first ##
+            load_textdomain( 'export-user-data', WP_LANG_DIR.'/plugins/export-user-data-'.$locale.'.mo' );
+
+            // try from plugin last ##
+            load_plugin_textdomain( 'export-user-data', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
         }
 
@@ -1310,7 +1312,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                 // allow array to be filtered ##
                 $meta_keys_system = apply_filters( 'export_user_data_meta_keys_system', $meta_keys_system );
-
+                $meta_keys = apply_filters( 'export_user_data_meta_keys', $meta_keys );
                 // test array ##
                 #echo '<pre>'; var_dump($meta_keys); echo '</pre>';
 
@@ -1619,14 +1621,15 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                         <input type="text" id="q_eud_updated_since_date" name="updated_since_date" value="<?php echo $this->updated_since_date; ?>" class="updated-datepicker" />
                         <select id="bp_field_updated_since" name="bp_field_updated_since">
 <?php
-
+                        if ( !empty($bp_fields) ) :
                         foreach ( $bp_fields as $key ) {
-			    if ( $this->field_updated_since == $key ) {
-                            	echo "<option value='".esc_attr( $key )."' title='".esc_attr( $key )."' selected>$key</option>";
-			    } else {
-                            	echo "<option value='".esc_attr( $key )."' title='".esc_attr( $key )."'>$key</option>";
-			    }
+            			    if ( $this->field_updated_since == $key ) {
+                                        	echo "<option value='".esc_attr( $key )."' title='".esc_attr( $key )."' selected>$key</option>";
+            			    } else {
+                                        	echo "<option value='".esc_attr( $key )."' title='".esc_attr( $key )."'>$key</option>";
+            			    }
                         }
+                        endif;
 
 ?>
                         </select>
