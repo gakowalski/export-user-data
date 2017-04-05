@@ -4,7 +4,7 @@
 Plugin Name: Export User Data
 Plugin URI: http://qstudio.us/plugins/
 Description: Export User data, metadata and BuddyPress X-Profile data.
-Version: 1.3.0
+Version: 1.3.1
 Author: Q Studio
 Author URI: http://qstudio.us
 License: GPL2
@@ -20,6 +20,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
     // plugin version
     define( 'Q_EUD_HOOK', 'init' ); // wp action to hook to ##
+    define( 'Q_EUD_HOOK_ADMIN', 'admin_init' ); // wp action to hook to ##
     define( 'Q_EUD_PRIORITY', '1000000' ); // priority ##
     define( 'Q_LOG_PREFIX', 'EUD' ); // wp action to hook to ##
 
@@ -114,13 +115,13 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
             if ( is_admin() ) {
 
                 // load BP ##
-                add_action( Q_EUD_HOOK, array( $this, 'load_buddypress' ), Q_EUD_PRIORITY+1 );
+                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'load_buddypress' ), Q_EUD_PRIORITY+1 );
 
                 // load user options ##
-                add_action( Q_EUD_HOOK, array( $this, 'load_user_options' ), Q_EUD_PRIORITY+2 );
+                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'load_user_options' ), Q_EUD_PRIORITY+2 );
 
                 // run export ##
-                add_action( Q_EUD_HOOK, array( $this, 'generate_data' ), Q_EUD_PRIORITY+3 );
+                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'generate_data' ), Q_EUD_PRIORITY+3 );
 
                 // filter exported data - perhaps unused ##
                 #add_filter( 'q_eud_exclude_data', array( $this, 'exclude_data' ) );
@@ -146,7 +147,6 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
          */
         protected function log( $log )
         {
-
             if ( $this->debug && true === WP_DEBUG ) {
 
                 $trace = debug_backtrace();
@@ -1116,6 +1116,11 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                     }
 
+                    if ( $field == 'user_groups' ) {
+                        $value = $this->get_user_groups($user);
+
+                    }
+
                     // sanitize ##
                     $value = $this->sanitize($value);
 
@@ -1129,6 +1134,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                         $data[] = $this->special_characters( $value );
                     }
+                    //$this->log($data);
 
                 }
 
@@ -1145,6 +1151,21 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
         }
 
+        protected function get_user_groups($user) 
+        {
+            $user_groups = '';
+            if (is_plugin_active( 'user-access-manager/user-access-manager.php' ))  {
+                global $oUserAccessManager;
+                $aUamUserGroups = $oUserAccessManager->getAccessHandler()->getUsergroupsForObject('user', $user->ID);
+                $aNames = array();
+                foreach ($aUamUserGroups as $oUamUserGroup) {
+                    $groupName = $oUamUserGroup->getGroupName();
+                    array_push($aNames, $groupName);
+                }      
+                $user_groups = implode( ',', $aNames);
+            }
+            return $user_groups;
+        }
 
         /**
          * Content of the settings page
@@ -1279,6 +1300,9 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                 // get meta_key value from object ##
                 $meta_keys = wp_list_pluck( $meta_keys, 'meta_key' );
+
+                array_push($meta_keys, "user_groups");
+                //print_r($meta_keys);
 
                 // let's note some of them odd keys ##
                 $meta_keys_system = array(
