@@ -1,0 +1,247 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Export User Data\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-11-13 17:41+0000\n"
+"PO-Revision-Date: 2018-11-13 21:01+0000\n"
+"Last-Translator: www.grzegorzkowalski.pl <grzegorz.adam.kowalski@gmail.com>\n"
+"Language-Team: Polski\n"
+"Language: pl_PL\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10 >= 2 && n%10<=4 "
+"&&(n%100<10||n%100 >= 20)? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/"
+
+#: export-user-data.php:1725
+msgid "Advanced Options"
+msgstr "Ustawienia zaawansowane"
+
+#: export-user-data.php:1326 export-user-data.php:1329
+#: export-user-data.php:1412 export-user-data.php:1449
+msgid "All"
+msgstr "Wszystkie"
+
+#: export-user-data.php:1569
+msgid "All Programs"
+msgstr "Wszystkie progamy"
+
+#: export-user-data.php:1515
+msgid "All Roles"
+msgstr "Wszystkie role"
+
+#: export-user-data.php:1473
+msgid "BP User Groups"
+msgstr "Grupy użytkowników BP"
+
+#: export-user-data.php:1410
+msgid "BP xProfile Fields"
+msgstr "Pola xProfilu BP"
+
+#: export-user-data.php:1447
+msgid "BP xProfile Fields Update Time"
+msgstr "Ostatnia modyfikacja pól xProfilu BP"
+
+#: export-user-data.php:1326
+msgid "Common"
+msgstr "Wspólne"
+
+#: export-user-data.php:1654 export-user-data.php:1656
+msgid "CSV"
+msgstr ""
+
+#: export-user-data.php:1711
+msgid "Delete"
+msgstr "Usuń"
+
+#: export-user-data.php:1609
+#, php-format
+msgid ""
+"Enter an offset start number and a total number of users to export. <a "
+"href=\"%s\" target=\"_blank\">%s</a>"
+msgstr ""
+"Wprowadź numer pozycji początkowej i całkowitą liczbę użytkowników do "
+"eksportu. <a href=\"%s\" target=\"_blank\">%s</a>"
+
+#: export-user-data.php:1649 export-user-data.php:1651
+msgid "Excel"
+msgstr ""
+
+#: export-user-data.php:1673
+msgid "Export Name"
+msgstr "Nazwa eksportu"
+
+#. Name of the plugin
+#: export-user-data.php:200 export-user-data.php:1263
+msgid "Export User Data"
+msgstr "Eksportuj dane użytkowników"
+
+#. Description of the plugin
+msgid "Export User data, metadata and BuddyPress X-Profile data."
+msgstr "Eksportuj dane użytkowników, metadane i dane X-Profilu BuddyPress"
+
+#: export-user-data.php:1326
+msgid "Filter"
+msgstr "Filtruj"
+
+#: export-user-data.php:1536
+#, php-format
+msgid ""
+"Filter the exported users by a WordPress Role. <a href=\"%s\" "
+"target=\"_blank\">%s</a>"
+msgstr ""
+"Filtruj eksportowanych użytkowników według roli. <a href=\"%s\" "
+"target=\"_blank\">%s</a>"
+
+#: export-user-data.php:1644
+msgid "Format"
+msgstr ""
+
+#: export-user-data.php:1821
+msgid "Hide"
+msgstr "Ukryj"
+
+#. Author URI of the plugin
+msgid "http://qstudio.us"
+msgstr ""
+
+#. URI of the plugin
+msgid "http://qstudio.us/plugins/"
+msgstr ""
+
+#: export-user-data.php:1550
+#, php-format
+msgid "Include all of the users <a href=\"%s\" target=\"_blank\">%s</a>"
+msgstr "Dołącz wszystkich użytkowników <a href=\"%s\" target=\"_blank\">%s</a>"
+
+#: export-user-data.php:1478
+#, php-format
+msgid "Include BuddyPress Group Data. <a href=\"%s\" target=\"_blank\">%s</a>"
+msgstr ""
+
+#: export-user-data.php:1500
+#, php-format
+msgid ""
+"Include Standard user profile fields, such as user_login. <a href=\"%s\" "
+"target=\"_blank\">%s</a>"
+msgstr ""
+"Dołącz standardowe pola profilu użytkownika takie jak user_login. <a "
+"href=\"%s\" target=\"_blank\">%s</a>"
+
+#: export-user-data.php:1603
+msgid "Limit Range"
+msgstr "Ogranicz zakres"
+
+#: export-user-data.php:1637
+msgid ""
+"Limit the results to users who have updated this extended profile field "
+"after this date."
+msgstr ""
+"Ogranicz wyniki do użytkowników, którzy uaktualnili swoje pole rozszerzonego "
+"profilu po tej dacie."
+
+#: export-user-data.php:1710
+msgid "Load"
+msgstr "Przywróć"
+
+#: export-user-data.php:1268
+msgid "No users found."
+msgstr "Nie znaleziono użytkowników"
+
+#: export-user-data.php:1329 export-user-data.php:1412
+#: export-user-data.php:1449
+msgid "None"
+msgstr "Brak"
+
+#: export-user-data.php:1605
+msgid "Offset"
+msgstr "Zacznij od"
+
+#: export-user-data.php:1596
+msgid "Pick a start and end user registration date to limit the results."
+msgstr ""
+
+#: export-user-data.php:1564
+msgid "Programs"
+msgstr "Programy"
+
+#. Author of the plugin
+msgid "Q Studio"
+msgstr ""
+
+#: export-user-data.php:1590
+msgid "Registered"
+msgstr "Data rejestracji"
+
+#: export-user-data.php:1510
+msgid "Role"
+msgstr "Rola"
+
+#: export-user-data.php:1737
+msgid "Run Export"
+msgstr "Uruchom eksport"
+
+#: export-user-data.php:1674
+msgid "Save"
+msgstr "Zapisz"
+
+#: export-user-data.php:1718
+msgid "Save, load or delete your stored export options."
+msgstr "Zapisz, przywróć lub usuń zachowane ustawienia eksportu"
+
+#: export-user-data.php:1329 export-user-data.php:1412
+#: export-user-data.php:1449
+msgid "Select"
+msgstr "Wybierz"
+
+#: export-user-data.php:1435
+msgid "Select the BuddyPress XProfile keys to export"
+msgstr ""
+
+#: export-user-data.php:1466
+msgid "Select the BuddyPress XProfile keys updated dates to export"
+msgstr ""
+
+#: export-user-data.php:1662
+msgid "Select the format for the export file."
+msgstr "Wybierz format pliku eksportowego."
+
+#: export-user-data.php:1380
+msgid ""
+"Select the user meta keys to export, use the filters to simplify the list."
+msgstr ""
+"Wybierz meta klucze użytkowników do eksportu, użyj filtrów aby uprościć "
+"listę."
+
+#: export-user-data.php:1729 export-user-data.php:1823
+msgid "Show"
+msgstr "Pokaż"
+
+#: export-user-data.php:1491
+msgid "Standard User Fields"
+msgstr "Standardowe pola użytkowników"
+
+#: export-user-data.php:1669
+msgid "Stored Options"
+msgstr "Zapisane ustawienia"
+
+#: export-user-data.php:1606
+msgid "Total"
+msgstr "Ilość"
+
+#: export-user-data.php:1618
+msgid "Updated Since"
+msgstr ""
+
+#: export-user-data.php:1324
+msgid "User Meta Fields"
+msgstr "Meta pola użytkowników"
+
+#: export-user-data.php:1545
+msgid "User Roles"
+msgstr "Role użytkowników"
+
+#: export-user-data.php:1161
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Nie masz wystarczających uprawnień do dostępu do tej strony"

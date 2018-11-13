@@ -25,7 +25,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
     define( 'Q_LOG_PREFIX', 'EUD' ); // wp action to hook to ##
 
     // plugin version
-    define( 'Q_EUD', '1.3.0' ); // version ##
+    define( 'Q_EUD', '1.3.1' ); // version ##
 
     // on activate ##
     #register_activation_hook( __FILE__, 'function' );
