@@ -1,10 +1,11 @@
 === Export User Data ===
-Contributors: qlstudio
+Contributors: qlstudio, gakowalski
 Tags: user, users, xprofile, usermeta csv, excel, batch, export, save, download, html
 Requires at least: 3.2
-Tested up to: 4.4.2
+Tested up to: 4.9.8
 Stable tag: 1.3.2
 License: GPLv2
+Requires PHP: 5.6
 
 Export users data, metadata and buddypress xprofile data to a CSV, HTML5 or Excel file
 
@@ -21,10 +22,6 @@ Includes an option to export the users by role, registration date range, usermet
 * Exports users by role
 * Exports users by date range
 * Export user BuddyPress xProfile data
-
-For feature request and bug reports, [please use the Q Support Website](https://qstudio.us/support/categories/export-user-data).
-
-Please do not use the Wordpress.org forum to report bugs, as we no longer monitor or respond to questions there.
 
 == Installation ==
 
