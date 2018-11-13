@@ -25,7 +25,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
     define( 'Q_LOG_PREFIX', 'EUD' ); // wp action to hook to ##
 
     // plugin version
-    define( 'Q_EUD', '1.3.1' ); // version ##
+    define( 'Q_EUD', '1.3.2' ); // version ##
 
     // on activate ##
     #register_activation_hook( __FILE__, 'function' );
@@ -740,11 +740,11 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                 case ( 'excel' ):
 
                     // to xls ##
-                    header( 'Content-Description: File Transfer' );
-                    header("Content-Type: application/vnd.ms-excel");
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/vnd.ms-excel');
                     header("Content-Disposition: attachment; filename=$filename.xls");
-                    header("Pragma: no-cache");
-                    header("Expires: 0");
+                    header('Pragma: no-cache');
+                    header('Expires: 0');
 
                     // set a csv check flag
                     $is_csv = false;
@@ -769,6 +769,23 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                     break;
 
+              case ( 'html5' ):
+                header('Content-Description: File Transfer');
+                header('Content-Type: text/html; charset=utf-8');
+                header("Content-Disposition: attachment; filename=$filename.html");
+                header('Pragma: no-cache');
+                header('Expires: 0');
+
+                $is_csv = false;
+                include( 'html-template.php' );
+
+                $doc_begin  = $xml_doc_begin;
+                $pre        = $xml_pre;
+                $seperator  = $xml_seperator;
+                $breaker    = $xml_breaker;
+                $doc_end    = $xml_doc_end;
+
+                break;
             }
 
 
@@ -1647,6 +1664,11 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                               echo '<option selected value="excel">' . __( 'Excel', 'export-user-data' ) . '</option>';
                             } else {
                               echo '<option value="excel">' . __( 'Excel', 'export-user-data' ) . '</option>';
+                            }
+                            if ( isset ( $this->format ) && ( $this->format == 'html5' ) ) {
+                              echo '<option selected value="html5">' . __( 'HTML5', 'export-user-data' ) . '</option>';
+                            } else {
+                              echo '<option value="html5">' . __( 'HTML5', 'export-user-data' ) . '</option>';
                             }
                             if ( isset ( $this->format ) && ( $this->format == 'csv' ) ) {
                               echo '<option selected value="csv">' . __( 'CSV', 'export-user-data' ) . '</option>';
