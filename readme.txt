@@ -1,12 +1,12 @@
 === Export User Data ===
 Contributors: qlstudio
-Tags: user, users, xprofile, usermeta csv, excel, batch, export, save, download
+Tags: user, users, xprofile, usermeta csv, excel, batch, export, save, download, html
 Requires at least: 3.2
 Tested up to: 4.4.2
 Stable tag: 1.3.2
 License: GPLv2
 
-Export users data, metadata and buddypress xprofile data to a csv or Excel file
+Export users data, metadata and buddypress xprofile data to a CSV, HTML5 or Excel file
 
 == Description ==
 
@@ -51,10 +51,6 @@ To upload the plugin through WordPress, instead of FTP:
 = How to use? =
 
 Click on the 'Export User Data' link in the 'Users' menu, choose the role and the date range or don't select anything if you want to export all users, then click 'Export'. That's all!
-
-== Screenshots ==
-
-1. User export screen
 
 == Changelog ==
 

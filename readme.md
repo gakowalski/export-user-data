@@ -1,12 +1,12 @@
 # Export User Data #
 **Contributors:** qlstudio
-**Tags:** user, users, xprofile, usermeta csv, excel, batch, export, save, download
+**Tags:** user, users, xprofile, usermeta csv, excel, batch, export, save, download, html
 **Requires at least:** 3.2
 **Tested up to:** 4.4.2
 **Stable tag:** 1.3.2
 **License:** GPLv2
 
-Export users data, metadata and buddypress xprofile data to a csv or Excel file
+Export users data, metadata and buddypress xprofile data to a CSV, HTML5 or Excel file
 
 ## Description ##
 
@@ -55,7 +55,7 @@ Click on the 'Export User Data' link in the 'Users' menu, choose the role and th
 ## Screenshots ##
 
 ### 1. User export screen ###
-![ScreenShot](http://s.w.org/plugins/export-user-data/screenshot-1.png?r=859689)
+![ScreenShot](screenshot-1.png)
 
 ## Changelog ##
 
