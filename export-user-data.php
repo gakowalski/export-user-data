@@ -44,7 +44,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         #private static $instance = null;
 
         /* properties */
-        #protected $text_domain = 'export-user-data'; // for translation ##
+        protected $text_domain = 'export-user-data'; // for translation ##
         protected $debug = true; // debug ##
         protected $q_eud_exports = ''; // export settings ##
         protected $usermeta_saved_fields = array();
@@ -61,6 +61,8 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 		protected $updated_since_date = '';
 		protected $field_updated_since = '';
         protected $format = '';
+        protected $export_method = 'excel'; // default to Excel export ##
+        protected $export_page = null; //will be defined in add_admin_pages()
         protected $bp_data_available = false;
         protected $allowed_tags = '';
 
@@ -112,8 +114,6 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                 // UI style and functionality ##
                 add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 1 );
-                add_action( 'admin_footer', array( $this, 'jquery' ), 100000 );
-                add_action( 'admin_footer', array( $this, 'css' ), 100000 );
 
             }
 
@@ -130,13 +130,13 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         {
 
             // The "plugin_locale" filter is also used in load_plugin_textdomain()
-            $locale = apply_filters( 'plugin_locale', get_locale(), 'export-user-data' );
+            $locale = apply_filters( 'plugin_locale', get_locale(), $this->text_domain );
 
             // try from global WP location first ##
-            load_textdomain( 'export-user-data', WP_LANG_DIR.'/plugins/export-user-data-'.$locale.'.mo' );
+            load_textdomain( $this->text_domain, WP_LANG_DIR.'/plugins/'.$this->text_domain.'-'.$locale.'.mo' );
 
             // try from plugin last ##
-            load_plugin_textdomain( 'export-user-data', false, basename( dirname( __FILE__ ) ) . '/languages' );
+            load_plugin_textdomain( $this->text_domain, false, basename( dirname( __FILE__ ) ) . '/languages' );
 
         }
 
@@ -199,33 +199,49 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         public function add_admin_pages()
         {
 
-            add_users_page( __( 'Export User Data', 'export-user-data' ), __( 'Export User Data', 'export-user-data' ), 'list_users', 'export-user-data', array( $this, 'users_page' ) );
-
+            $this->export_page = add_users_page(
+                __( 'Export User Data', $this->text_domain ),
+                __( 'Export User Data', $this->text_domain ),
+                'list_users',
+                $this->text_domain,
+                array( $this, 'users_page' )
+            );
         }
 
 
         /**
          * style and interaction
          */
-        public function admin_enqueue_scripts( $hook )
+        public function admin_enqueue_scripts()
         {
-
             // load the scripts on only the plugin admin page ##
-            if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'export-user-data' ) ) {
+            if (!get_current_screen()->id == $this->export_page) return;
 
-                wp_register_style( 'css-q_export_user_data', plugins_url( 'css/export-user-data.css' ,__FILE__ ), '', Q_EUD );
-                wp_enqueue_style( 'css-q_export_user_data' );
-                wp_enqueue_script( 'q_eud_multi_select_js', plugins_url( 'js/jquery.multi-select.js', __FILE__ ), array('jquery'), '0.9.8', false );
+            wp_register_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+            wp_register_style('q_export_user_data', plugins_url( 'css/export-user-data.css' ,__FILE__ ),array('jquery-ui-css'),Q_EUD);
+            wp_register_script('q_eud_multi_select_js', plugins_url( 'js/jquery.multi-select.js', __FILE__ ), array('jquery'), '0.9.8', false );
+            wp_register_script('q_export_user_data', plugins_url( 'js/export-user-data.js', __FILE__ ), array('jquery','q_eud_multi_select_js','jquery-ui-datepicker'),Q_EUD, true );
 
-                // add script ##
-                wp_enqueue_script('jquery-ui-datepicker');
 
-                // add style ##
-                wp_enqueue_style( 'jquery-ui-datepicker' );
-                wp_enqueue_style('jquery-ui-css', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+            //localize vars
+            // method returns an object with "first" & "last" keys ##
+            $user_registered_dates = self::get_user_registered_dates();
 
-            }
+            $localize_vars=array(
+                'usermeta_saved_fields'                 => $this->quote_array( $this->usermeta_saved_fields ),
+                'bp_fields_saved_fields'                => $this->quote_array($this->bp_fields_saved_fields ),
+                'bp_fields_update_time_saved_fields'    => $this->quote_array( $this->bp_fields_update_time_saved_fields ),
+                'txt_hide'                  => __( 'Hide', $this->text_domain ),
+                'txt_show'                  => __( 'Show', $this->text_domain ),
+                'datepicker_min'            => substr( $user_registered_dates["0"]->first, 0, 10 ),
+                'datepicker_max'            => substr( $user_registered_dates["0"]->last, 0, 10 ),
+                'start_of_week'             => get_option('start_of_week') ? get_option('start_of_week') : 'yy-mm-dd',
+            );
 
+            wp_localize_script('q_export_user_data','q_eud', $localize_vars);
+
+            wp_enqueue_style( 'q_export_user_data' );
+            wp_enqueue_script( 'q_export_user_data' );
         }
 
 
@@ -700,17 +716,14 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
             }
 
             // export method ? ##
-            $export_method = 'excel'; // default to Excel export ##
             if ( isset( $_POST['format'] ) && $_POST['format'] != '' ) {
-
-                $export_method = sanitize_text_field( $_POST['format'] );
-
+                $this->export_method = sanitize_text_field( $_POST['format'] );
             }
 
             // set export filename structure ##
             $filename = $sitename . 'users.' . date( 'Y-m-d-H-i-s' );
 
-            switch ( $export_method ) {
+            switch ($this->export_method) {
 
                 case ( 'csv' ):
 
@@ -1555,7 +1568,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                         <p class="description"><?php
                             printf(
                                 __( 'Filter the exported users by a WordPress Role. <a href="%s" target="_blank">%s</a>', 'export-user-data' )
-                                ,   esc_html('http://codex.wordpress.org/Roles_and_Capabilities')
+                                ,   esc_html('https://codex.wordpress.org/Roles_and_Capabilities')
                                 ,   'Codex'
                             );
                         ?></p>
@@ -1569,7 +1582,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                         <p class="description"><?php
                             printf(
                                 __( 'Include all of the users <a href="%s" target="_blank">%s</a>', 'export-user-data' )
-                                ,   esc_html('http://codex.wordpress.org/Roles_and_Capabilities')
+                                ,   esc_html('https://codex.wordpress.org/Roles_and_Capabilities')
                                 ,   'Roles'
                             );
                         ?></p>
@@ -1628,7 +1641,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                         <p class="description"><?php
                             printf(
                                 __( 'Enter an offset start number and a total number of users to export. <a href="%s" target="_blank">%s</a>', 'export-user-data' )
-                                ,   esc_html('http://codex.wordpress.org/Function_Reference/get_users#Parameters')
+                                ,   esc_html('https://codex.wordpress.org/Function_Reference/get_users#Parameters')
                                 ,   'Codex'
                             );
                         ?></p>
@@ -1764,176 +1777,6 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         </div>
 
 <?php
-        }
-
-
-        /**
-         * Inline jQuery
-         * @since       0.8.2
-         */
-        public function jquery()
-        {
-
-            // load the scripts on only the plugin admin page
-            if (isset( $_GET['page'] ) && ( $_GET['page'] == 'export-user-data' ) ) {
-
-?>
-        <script>
-
-        // lazy load in some jQuery validation ##
-        jQuery(document).ready(function($) {
-
-            // build super multiselect ##
-            jQuery('#usermeta, #bp_fields, #bp_fields_update_time').multiSelect();
-
-            //Select any fields from saved settings ##
-            jQuery('#usermeta').multiSelect('select',([<?php echo( $this->quote_array( $this->usermeta_saved_fields ) ); ?>]));
-            jQuery('#bp_fields').multiSelect('select',([<?php echo( $this->quote_array($this->bp_fields_saved_fields ) ); ?>]));
-            jQuery('#bp_fields_update_time').multiSelect('select',([<?php echo( $this->quote_array( $this->bp_fields_update_time_saved_fields ) ); ?>]));
-
-            // show only common ##
-            jQuery('.usermeta-common').click(function(e){
-                e.preventDefault();
-                jQuery('#ms-usermeta .ms-selectable li.system').hide();
-            });
-
-            // show all ##
-            jQuery('.usermeta-all').click(function(e){
-                e.preventDefault();
-                jQuery('#ms-usermeta .ms-selectable li').show();
-            });
-
-            // select all ##
-            jQuery('.select-all').click(function(e){
-                e.preventDefault();
-                jQuery( jQuery(this).parent().parent().parent().find( 'select' ) ).multiSelect( 'select_all' );
-            });
-
-            // select none ##
-            jQuery('.select-none').click(function(e){
-                e.preventDefault();
-                jQuery( jQuery(this).parent().parent().parent().find( 'select' ) ).multiSelect( 'deselect_all' );
-            });
-
-
-            // validate number inputs ##
-            $("input.numeric").blur(function() {
-
-                //console.log("you entered "+ $(this).val());
-
-                if ( $(this).val() && ! $.isNumeric( $(this).val() ) ) {
-
-                    //console.log("this IS NOT a number");
-                    $(this).css({ 'background': 'red', 'color': 'white' }); // highlight error ##
-                    $("p.submit .button-primary").attr('disabled','disabled'); // disable submit ##
-
-                } else {
-
-                    $(this).css({ 'background': 'white', 'color': '#333' }); // remove error highlighting ##
-                    $("p.submit .button-primary").removeAttr('disabled'); // enable submit ##
-
-                }
-
-            });
-
-            // toggle advanced options ##
-            jQuery(".toggle a").click( function(e) {
-                e.preventDefault();
-                $toggleable = jQuery("tr.toggleable");
-                $toggleable.toggle();
-                if ( $toggleable.is(":visible") ) {
-                    jQuery(this).text("<?php _e( 'Hide', 'export-user-data' ); ?>");
-                } else {
-                    jQuery(this).text("<?php _e( 'Show', 'export-user-data' ); ?>");
-                }
-            });
-
-            // validate save button ##
-            jQuery("#save_export").click( function(e) {
-
-                // grab the value of the input ##
-                var q_eud_save_options_new_export = jQuery('#q_eud_save_options_new_export').val();
-
-                if ( ! q_eud_save_options_new_export || q_eud_save_options_new_export == '' ) {
-
-                    e.preventDefault(); // stop things here ##
-                    jQuery('#q_eud_save_options_new_export').addClass("error");
-
-                }
-
-            });
-
-            // remove validation on focus ##
-            jQuery("body").on( 'focus', '#q_eud_save_options_new_export', function(e) {
-
-                jQuery(this).removeClass("error");
-
-            });
-
-<?php
-
-            // method returns an object with "first" & "last" keys ##
-            $dates = $this->get_user_registered_dates();
-
-            // get date format from WP settings #
-            $date_format = 'yy-mm-dd' ; // get_option('date_format') ? get_option('date_format') : 'yy-mm-dd' ;
-            $start_of_week = get_option('start_of_week') ? get_option('start_of_week') : 'yy-mm-dd' ;
-            #$this->log( 'Date format: '.$date_format );
-
-?>
-
-            // start date picker ##
-            jQuery('.start-datepicker').datepicker( {
-                dateFormat  : '<?php echo $date_format; ?>',
-                minDate     : '<?php echo substr( $dates["0"]->first, 0, 10 ); ?>',
-                maxDate     : '<?php echo substr( $dates["0"]->last, 0, 10 ); ?>',
-                firstDay    : '<?php echo $start_of_week; ?>'
-            } );
-
-            // end date picker ##
-            jQuery('.end-datepicker').datepicker( {
-                dateFormat  : '<?php echo $date_format; ?>',
-                minDate     : '<?php echo substr( $dates["0"]->first, 0, 10 ); ?>',
-                maxDate     : '<?php echo substr( $dates["0"]->last, 0, 10 ); ?>',
-                firstDay    : '<?php echo $start_of_week; ?>'
-            } );
-
-            // end date picker ##
-			// might want to set minDate to something else, but not sure
-			// what would be best for everyone
-			jQuery('.updated-datepicker').datepicker( {
-				dateFormat  : '<?php echo $date_format; ?>',
-				minDate     : '<?php echo substr( $dates["0"]->first, 0, 10 ); ?>',
-				maxDate	    : '0',
-                firstDay    : '<?php echo $start_of_week; ?>'
-			} );
-
-        });
-
-        </script>
-<?php
-            }
-
-        }
-
-
-        /**
-         * Inline CSS
-         * @since       0.8.2
-         */
-        public function css()
-        {
-
-            // load the scripts on only the plugin admin page
-            if (isset( $_GET['page'] ) && ( $_GET['page'] == 'export-user-data' ) ) {
-?>
-        <style>
-            .toggleable { display: none; }
-            .hidden { display: none; }
-        </style>
-<?php
-            }
-
         }
 
 
@@ -2226,7 +2069,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
          *
          * @since       1.1.4
          */
-        protected function unserialize( $value )
+        protected static function unserialize( $value )
         {
 
             // the $value is serialized ##
