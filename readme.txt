@@ -53,6 +53,8 @@ Click on the 'Export User Data' link in the 'Users' menu, choose the role and th
 
 = 1.3.2 =
 * Export to HTML5
+* Added Polish translation
+* Added Czech translation
 
 = 1.3.1 =
 * Moved all internal action hooks to admin_init to allow for internal function loading

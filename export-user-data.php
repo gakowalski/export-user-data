@@ -80,6 +80,47 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
 
         /**
+        * Hook intro WP filters and actions
+        *
+        * @since 1.2.8
+        * @return void
+        */
+        public function run_hooks()
+        {
+
+            // set text domain ##
+            add_action( 'init', array( $this, 'export_user_data_textdomain' ), -1 );
+
+            if ( is_admin() ) {
+
+                add_action( 'admin_init', array( $this, 'export_user_data_load_plugin_textdomain') );
+
+                // load BP ##
+                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'load_buddypress' ), Q_EUD_PRIORITY+1 );
+
+                // load user options ##
+                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'load_user_options' ), Q_EUD_PRIORITY+2 );
+
+                // run export ##
+                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'generate_data' ), Q_EUD_PRIORITY+3 );
+
+                // filter exported data - perhaps unused ##
+                #add_filter( 'q_eud_exclude_data', array( $this, 'exclude_data' ) );
+
+                // add export page inside admin ##
+                add_action( 'admin_menu', array( $this, 'add_admin_pages' ), 10 );
+
+                // UI style and functionality ##
+                add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 1 );
+                add_action( 'admin_footer', array( $this, 'jquery' ), 100000 );
+                add_action( 'admin_footer', array( $this, 'css' ), 100000 );
+
+            }
+
+        }
+
+
+        /**
          * Load plugin text-domain
          *
          * @since       0.9.0
@@ -96,45 +137,6 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
             // try from plugin last ##
             load_plugin_textdomain( 'export-user-data', false, basename( dirname( __FILE__ ) ) . '/languages' );
-
-        }
-
-
-        /**
-        * Hook intro WP filters and actions
-        *
-        * @since 1.2.8
-        * @return void
-        */
-        public function run_hooks()
-        {
-
-            // set text domain ##
-            add_action( 'init', array( $this, 'load_plugin_textdomain' ), 1 );
-
-            if ( is_admin() ) {
-
-                // load BP ##
-                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'load_buddypress' ), Q_EUD_PRIORITY+1 );
-
-                // load user options ##
-                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'load_user_options' ), Q_EUD_PRIORITY+2 );
-
-                // run export ##
-                add_action( Q_EUD_HOOK_ADMIN, array( $this, 'generate_data' ), Q_EUD_PRIORITY+3 );
-
-                // filter exported data - perhaps unused ##
-                #add_filter( 'q_eud_exclude_data', array( $this, 'exclude_data' ) );
-
-                // add export page inside admin ##
-                add_action( 'admin_menu', array( $this, 'add_admin_pages' ) );
-
-                // UI style and functionality ##
-                add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 1 );
-                add_action( 'admin_footer', array( $this, 'jquery' ), 100000 );
-                add_action( 'admin_footer', array( $this, 'css' ), 100000 );
-
-            }
 
         }
 
@@ -1328,6 +1330,8 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                 // allow array to be filtered ##
                 $meta_keys_system = apply_filters( 'export_user_data_meta_keys_system', $meta_keys_system );
+
+                $meta_keys = apply_filters( 'export_user_data_meta_keys', $meta_keys );
 
                 // test array ##
                 #echo '<pre>'; var_dump($meta_keys); echo '</pre>';
