@@ -53,6 +53,7 @@ Click on the 'Export User Data' link in the 'Users' menu, choose the role and th
 ## Changelog ##
 
 *** 1.3.2 ***
+* Added support for User Access Management plugin (export usergroup membership)
 * Export to HTML5
 * Added Polish translation
 * Added Czech translation

@@ -126,7 +126,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
          * @since       0.9.0
          * @return      void
          **/
-        public function load_plugin_textdomain()
+        public function export_user_data_load_plugin_textdomain()
         {
 
             // The "plugin_locale" filter is also used in load_plugin_textdomain()
@@ -1187,14 +1187,22 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
         {
             $user_groups = '';
             if (is_plugin_active( 'user-access-manager/user-access-manager.php' ))  {
-                global $oUserAccessManager;
-                $aUamUserGroups = $oUserAccessManager->getAccessHandler()->getUsergroupsForObject('user', $user->ID);
+                global $userAccessManager;
+
+                if (isset($userAccessManager)) {
+                    $userGroupHandler = $userAccessManager->getUserGroupHandler();
+                    $userGroupsForUser = $userGroupHandler->getUserGroupsForObject(
+                        \UserAccessManager\Object\ObjectHandler::GENERAL_USER_OBJECT_TYPE,
+                        $user->ID
+                    );
+
                 $aNames = array();
-                foreach ($aUamUserGroups as $oUamUserGroup) {
-                    $groupName = $oUamUserGroup->getGroupName();
+                foreach ($userGroupsForUser as $oUamUserGroup) {
+                    $groupName = $oUamUserGroup->getName();
                     array_push($aNames, $groupName);
                 }
                 $user_groups = implode( ',', $aNames);
+              }
             }
             return $user_groups;
         }
@@ -1670,7 +1678,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
                         ?></p>
                     </td>
                 </tr><?php
-				if( is_array( $bp_fields ) && !empty( $bp_fields ) ) : ?>
+				if( function_exists ('bp_is_active') && is_array( $bp_fields ) && !empty( $bp_fields ) ) : ?>
                 <tr valign="top" class="toggleable">
                     <th scope="row"><label><?php _e( 'Updated Since', 'export-user-data' ); ?></label></th>
                     <td>
