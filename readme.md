@@ -18,6 +18,7 @@ Includes an option to export the users by role, registration date range, usermet
 * Exports users by role
 * Exports users by date range
 * Export user BuddyPress xProfile data
+* Export user group memebership from User Access Manager plugin
 
 ## Installation ##
 
