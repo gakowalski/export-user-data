@@ -1149,6 +1149,11 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                     }
 
+                    if ( $field == 'user_groups' ) {
+                        $value = $this->get_user_groups($user);
+
+                    }
+
                     // sanitize ##
                     $value = $this->sanitize($value);
 
@@ -1178,6 +1183,21 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
         }
 
+        protected function get_user_groups($user)
+        {
+            $user_groups = '';
+            if (is_plugin_active( 'user-access-manager/user-access-manager.php' ))  {
+                global $oUserAccessManager;
+                $aUamUserGroups = $oUserAccessManager->getAccessHandler()->getUsergroupsForObject('user', $user->ID);
+                $aNames = array();
+                foreach ($aUamUserGroups as $oUamUserGroup) {
+                    $groupName = $oUamUserGroup->getGroupName();
+                    array_push($aNames, $groupName);
+                }
+                $user_groups = implode( ',', $aNames);
+            }
+            return $user_groups;
+        }
 
         /**
          * Content of the settings page
@@ -1312,6 +1332,9 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                 // get meta_key value from object ##
                 $meta_keys = wp_list_pluck( $meta_keys, 'meta_key' );
+
+                array_push($meta_keys, "user_groups");
+                //print_r($meta_keys);
 
                 // let's note some of them odd keys ##
                 $meta_keys_system = array(
