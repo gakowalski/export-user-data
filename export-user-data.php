@@ -2025,7 +2025,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
          * @param    bool        $trim_all       trim ALL whitespace from string
          * @return   string      imploded array
          */
-        protected function recursive_implode( $array, $return = null, $glue = '|' )
+        protected function recursive_implode( $array, $return = null, $glue = '|', $trim_all = false)
         {
 
             // unserialize ##
@@ -2065,7 +2065,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
 
                 if( is_array( $value ) ) {
 
-                    $return .= $glue . $key . $glue . $this->recursive_implode( $value, $return, $glue );
+                    $return .= $glue . $key . $glue . $this->recursive_implode( $value, $return, $glue, $trim_all );
 
                 } else {
 
@@ -2083,7 +2083,7 @@ if ( ! class_exists( 'Q_Export_User_Data' ) )
             }
 
             // Trim ALL whitespace ##
-            if ( $return ) {
+            if ( $trim_all ) {
 
                 $return = preg_replace( "/(\s)/ixsm", '', $return );
 
